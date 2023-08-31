@@ -26,7 +26,7 @@ plnot: [ "!" ws* ident ws* end-st]
 exp1: [ ident | number]
 exp: [ exp1 ws* any [ws* ["-" | "+" | "*" | "/"] ws* exp1 (pp "#De nested exp1")]]
 statement:
- [ws* [assign (pp "#De assign")| call | question | plnot | loop | plif | procedure |
+ [ws* [assign (pp "#De assign")| call | question | plnot | loop | plif |
  [ws* begin (pp "#De begin") ws* 
  any statement (pp "#D nested st") ending (pp "#De end") ws*]] ws*]
 statement1: [ ws* [assign | call | question | plnot | plif ] ws*]
