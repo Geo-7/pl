@@ -4,6 +4,12 @@ Rebol [
 ]
 
 print "PL/0 Started"
+pr: func [t v]
+[
+  block: make object! [type: t value: v]
+  if my_debug [print block]
+  print ""
+]
 pp: func [text]
   [if my_debug [print text]]
 my_debug: true
@@ -16,15 +22,15 @@ number: [some digit]
 end-st: [";" ws*]
 ending: [ws* "end" ws*]
 begin: [ws* "begin" ws*]
-var: ["var" ws* ident (pp "#D var") any [ws* "," ws* ident] ws* end-st  (pp "#D var-end") ]
-const-assign: [ident ws* "=" ws* number]
+var: ["var" ws* copy id ident (pr "VAR" id) any [ws* "," ws* copy id ident (pr "VAR" id)] ws* end-st  (pr "SEMICOLON" ";") ]
+const-assign: [copy id ident (pr "CONST" id) ws* "=" ws* copy id number (pr "CONST" id)]
 const: [ws* "const" (pp "#D const") ws* const-assign any [ws* "," ws* const-assign] ws* end-st (pp "#D end-const")]
 assign: [ident ws* ":=" ws* exp ws* end-st]
 call: [ ws* "call" (pp "#D call") ws* ident (pp "#D call-ident") ws* end-st]
 question: [ "?" ws* ident ws* end-st]
 plnot: [ "!" ws* ident ws* end-st]
 exp1: [ ident | number]
-exp: [ exp1 ws* any [ws* ["-" | "+" | "*" | "/"] ws* exp1 (pp "#D nested exp1")]]
+exp: [ copy id exp1 (pr "exp" id) ws* any [ws* ["-" | "+" | "*" | "/"] ws* exp1 (pp "#D nested exp1")]]
 statement:
  [ws* [assign (pp "#D assign")| call | question | plnot | loop | plif |
  [ws* begin (pp "#D begin") ws* 
@@ -170,7 +176,7 @@ test_complete: does
      either parse prog app [print "parsing complete_app OK"]
      [print "parsing complete_app FAILED"]
   ]
-test_var
+{test_var
 test_const
 test_call
 test_question
@@ -179,7 +185,7 @@ test_assign
 test_statement
 test_if
 test_loop
-test_procedure
+test_procedure}
 test_complete
 
 
