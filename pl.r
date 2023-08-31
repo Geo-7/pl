@@ -133,37 +133,37 @@ test_complete: does
   [
     prog:{
     	const max = 100;
-var arg, ret;
+      var arg, ret;
 
-procedure isprime;
-var i;
-begin
-	ret := 1;
-	i := 2;
-	while i < arg do
-	begin
-		if arg / i * i = arg then
-		begin
-			ret := 0;
-			i := arg;
-		end;
-		i := i + 1;
-	end
-end;
+      procedure isprime;
+      var i;
+      begin
+      	ret := 1;
+      	i := 2;
+      	while i < arg do
+      	begin
+      		if arg / i * i = arg then
+      		begin
+      			ret := 0;
+      			i := arg;
+      		end;
+      		i := i + 1;
+      	end
+      end;
 
-procedure primes;
-begin
-	arg := 2;
-	while arg < max do
-	begin
-		call isprime;
-		if ret = 1 then x :=2 ;
-		arg := arg + 1;
-	end
-end;
+      procedure primes;
+      begin
+      	arg := 2;
+      	while arg < max do
+      	begin
+      		call isprime;
+      		if ret = 1 then x :=2 ;
+      		arg := arg + 1;
+      	end
+      end;
 
-call primes;
-.
+      call primes;
+      .
     }
      either parse prog main_prog [print "parsing complete_app OK"]
      [print "parsing complete_app FAILED"]
