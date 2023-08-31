@@ -4,8 +4,9 @@ Rebol [
 ]
 
 print "PL/0 Started"
-pp: func [text]
-  [if my_debug [print text]]
+pp: func [text][
+  if my_debug [print text]
+]
 my_debug: false
 digit: charset "0123456789"
 letter: charset [#"a" - #"z" #"A" - #"Z"]
@@ -25,10 +26,10 @@ question: [ "?" ws* ident ws* end-st]
 write: [ ["!" | "write"] ws* ident ws* end-st]
 exp1: [ ident | number]
 exp: [ exp1 ws* any [ws* ["-" | "+" | "*" | "/"] ws* exp1 (pp "#D nested exp1")]]
-statement:
- [ws* [assign (pp "#D assign")| call | question | write | loop | plif |
- [ws* begin (pp "#D begin") ws* 
- any statement (pp "#D nested st") ending (pp "#D end") ws*]] ws*]
+statement:[ws* [assign (pp "#D assign")| 
+  call | question | write | loop | plif |
+  [ws* begin (pp "#D begin") ws* 
+  any statement (pp "#D nested st") ending (pp "#D end") ws*]] ws*]
 statement1: [ ws* [assign | call | question | write | plif ] ws*]
 loop: [ws* "while" (pp "#D while") ws* condition ws* "do" ws* statement]
 plif: [ws* "if" (pp "#D if") ws* condition ws* 
@@ -41,8 +42,7 @@ main_block: [any [const | var | procedure | statement | ws* ]]
 root: [main_block (pp "#D Main") "." (pp "#D DOT") ws*]
 app: [root (pp "#D App")]
 
-test_var: does
-  [
+test_var: does[
     result: true
     if not parse "var  ab, av;" var [result: false]
     if not parse "var  ab , av ;" var [result: false]
@@ -51,38 +51,32 @@ test_var: does
     [print "parsing var: FAILED"]
   ]
 
-test_const: does
-  [
+test_const: does [
     either parse "const  ab=10, av =  20;" const [print "parsing const: OK"]
     [print "parsing const: FAILED"]
   ]
 
-test_call: does
-  [
+test_call: does [
     either parse "call  abfbfb;" call [print "parsing call: OK"]
     [print "parsing call: FAILED"]
   ]
 
-test_question: does
-  [
+test_question: does [
     either parse "?  abfbfb;" question [print "parsing question: OK"]
     [print "parsing question: FAILED"]
   ]
 
-test_not: does
-  [
+test_not: does [
     either parse "!  abfbfb;" write [print "parsing not: OK"]
     [print "parsing not: FAILED"]
   ]
 
-test_assign: does 
-  [
+test_assign: does [
     either parse "a := i * j;" assign [print "parsing assign OK"]
     [print "parsing assign: FAILED"]
   ]
 
-test_statement: does
-  [
+test_statement: does [
     st1: {
       begin
       i := 0; s := 0;
@@ -92,16 +86,14 @@ test_statement: does
     [print "parsing statement FAILED"]
   ]
 
-test_if: does
-  [
+test_if: does [
     if1: "if i < I * 10 then z:=2*z;"
     either parse if1 plif [print "parsing if OK"]
     [print "parsing if FAILED"]
     
   ]
 
-test_loop: does
-  [
+test_loop: does [
     loop1: {
 	      while arg < max do
 	      begin
@@ -114,8 +106,7 @@ test_loop: does
       [print "parsing loop FAILED"]
   ]
 
-test_procedure: does
-  [
+test_procedure: does [
     proc1: {
     	procedure primes;
       begin
@@ -131,8 +122,7 @@ test_procedure: does
       either parse proc1 procedure [print "parsing procedure OK"]
       [print "parsing procedure FAILED"]
   ]
-test_complete: does
-  [
+test_complete: does [
     prog:{
     	const max = 100;
       var arg, ret;
@@ -181,68 +171,3 @@ test_if
 test_loop
 test_procedure
 test_complete
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
