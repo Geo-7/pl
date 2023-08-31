@@ -37,7 +37,8 @@ plif: [ws* "if" (pp "#De if") ws* condition ws*
 condition: [exp (pp "#De cond exp") ws* 
 ["#" | "<=" | ">=" | "<" | ">" | "="] ws* exp (pp "#De cond exp2") ws*]
 procedure: [ws* "procedure" ws* ident ws* end-st ws* any [var | const] statement ws* end-st ws*]
-main_prog: [any [const | var | procedure | statement | ws* ] "." (pp "#D end of app") ws*]
+main_block: [any [const | var | procedure | statement | ws* ]]
+main_prog: [main_block "." (pp "D end of app") ws*]
 
 test_var: does
   [
