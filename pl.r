@@ -6,7 +6,7 @@ Rebol [
 print "PL/0 Started"
 pp: func [text]
   [if my_debug [print text]]
-my_debug: false
+my_debug: true
 digit: charset "0123456789"
 letter: charset [#"a" - #"z" #"A" - #"Z"]
 ws: charset reduce [tab newline #" "]
@@ -16,29 +16,29 @@ number: [some digit]
 end-st: [";" ws*]
 ending: [ws* "end" ws*]
 begin: [ws* "begin" ws*]
-var: ["var" ws* ident (pp "#De var") any [ws* "," ws* ident] ws* end-st  (pp "#De var-end") ]
+var: ["var" ws* ident (pp "#D var") any [ws* "," ws* ident] ws* end-st  (pp "#D var-end") ]
 const-assign: [ident ws* "=" ws* number]
-const: [ws* "const" (pp "#De const") ws* const-assign any [ws* "," ws* const-assign] ws* end-st (pp "#De end-const")]
+const: [ws* "const" (pp "#D const") ws* const-assign any [ws* "," ws* const-assign] ws* end-st (pp "#D end-const")]
 assign: [ident ws* ":=" ws* exp ws* end-st]
-call: [ ws* "call" (pp "#De call") ws* ident (pp "#De call-ident") ws* end-st]
+call: [ ws* "call" (pp "#D call") ws* ident (pp "#D call-ident") ws* end-st]
 question: [ "?" ws* ident ws* end-st]
 plnot: [ "!" ws* ident ws* end-st]
 exp1: [ ident | number]
-exp: [ exp1 ws* any [ws* ["-" | "+" | "*" | "/"] ws* exp1 (pp "#De nested exp1")]]
+exp: [ exp1 ws* any [ws* ["-" | "+" | "*" | "/"] ws* exp1 (pp "#D nested exp1")]]
 statement:
- [ws* [assign (pp "#De assign")| call | question | plnot | loop | plif |
- [ws* begin (pp "#De begin") ws* 
- any statement (pp "#D nested st") ending (pp "#De end") ws*]] ws*]
+ [ws* [assign (pp "#D assign")| call | question | plnot | loop | plif |
+ [ws* begin (pp "#D begin") ws* 
+ any statement (pp "#D nested st") ending (pp "#D end") ws*]] ws*]
 statement1: [ ws* [assign | call | question | plnot | plif ] ws*]
-loop: [ws* "while" (pp "#De while") ws* condition ws* "do" ws* statement]
-plif: [ws* "if" (pp "#De if") ws* condition ws* 
-"then" (pp "#De then") ws* 
+loop: [ws* "while" (pp "#D while") ws* condition ws* "do" ws* statement]
+plif: [ws* "if" (pp "#D if") ws* condition ws* 
+"then" (pp "#D then") ws* 
 [[statement end-st] | statement1] ws*]
-condition: [exp (pp "#De cond exp") ws* 
-["#" | "<=" | ">=" | "<" | ">" | "="] ws* exp (pp "#De cond exp2") ws*]
+condition: [exp (pp "#D cond exp") ws* 
+["#" | "<=" | ">=" | "<" | ">" | "="] ws* exp (pp "#D cond exp2") ws*]
 procedure: [ws* "procedure" ws* ident ws* end-st ws* any [var | const] statement ws* end-st ws*]
-main_block: [any [const | var | procedure | statement | ws* ] (pp "#D Main")]
-root: [main_block (pp "#D Root") "." (pp "#D Root/") ws*]
+main_block: [any [const | var | procedure | statement | ws* ]]
+root: [main_block (pp "#D Main") "." (pp "#D DOT") ws*]
 app: [root (pp "#D App")]
 
 test_var: does
