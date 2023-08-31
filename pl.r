@@ -6,7 +6,7 @@ Rebol [
 print "PL/0 Started"
 pp: func [text]
   [if my_debug [print text]]
-my_debug: true
+my_debug: false
 digit: charset "0123456789"
 letter: charset [#"a" - #"z" #"A" - #"Z"]
 ws: charset reduce [tab newline #" "]
@@ -22,14 +22,14 @@ const: [ws* "const" (pp "#D const") ws* const-assign any [ws* "," ws* const-assi
 assign: [ident ws* ":=" ws* exp ws* end-st]
 call: [ ws* "call" (pp "#D call") ws* ident (pp "#D call-ident") ws* end-st]
 question: [ "?" ws* ident ws* end-st]
-plnot: [ "!" ws* ident ws* end-st]
+write: [ ["!" | "write"] ws* ident ws* end-st]
 exp1: [ ident | number]
 exp: [ exp1 ws* any [ws* ["-" | "+" | "*" | "/"] ws* exp1 (pp "#D nested exp1")]]
 statement:
- [ws* [assign (pp "#D assign")| call | question | plnot | loop | plif |
+ [ws* [assign (pp "#D assign")| call | question | write | loop | plif |
  [ws* begin (pp "#D begin") ws* 
  any statement (pp "#D nested st") ending (pp "#D end") ws*]] ws*]
-statement1: [ ws* [assign | call | question | plnot | plif ] ws*]
+statement1: [ ws* [assign | call | question | write | plif ] ws*]
 loop: [ws* "while" (pp "#D while") ws* condition ws* "do" ws* statement]
 plif: [ws* "if" (pp "#D if") ws* condition ws* 
 "then" (pp "#D then") ws* 
@@ -71,7 +71,7 @@ test_question: does
 
 test_not: does
   [
-    either parse "!  abfbfb;" plnot [print "parsing not: OK"]
+    either parse "!  abfbfb;" write [print "parsing not: OK"]
     [print "parsing not: FAILED"]
   ]
 
@@ -159,7 +159,7 @@ test_complete: does
       	while arg < max do
       	begin
       		call isprime;
-      		if ret = 1 then x :=2 ;
+      		if ret = 1 then write arg ;
       		arg := arg + 1;
       	end
       end;
